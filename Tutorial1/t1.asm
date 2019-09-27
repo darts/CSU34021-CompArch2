@@ -67,7 +67,7 @@ gcd:							; {
 	push ebp					;	push return addr	
 	mov ebp, esp				;	update SP
 
-	mov ecgx, [ebp + 12]			;	b.getFromStack()
+	mov ecx, [ebp + 12]			;	b.getFromStack()
 	mov eax, [ebp + 8]			;	retNum = a.getFromStack() 
 	test ecx, ecx	 			;	if(b == 0){
 	je retGCD					;		jump to end to return 
