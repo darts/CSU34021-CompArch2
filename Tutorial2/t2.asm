@@ -38,22 +38,22 @@ p:							; {
 	add rsp, 32				;	deallocateShadowSpace()
 	ret						; }
 
+**** double check reg vals
+public gcd					; int64 gcd(int64 a, int64 b)
+gcd:						; {
+	mov rax, rcx			;	retVal = a
+	test rdx, rdx			;	if(b == 0)
+	je retGCD				;	{ jump to end}
 
-public gcd
-gcd:
-	mov rax, rcx
-	test rdx, rdx
-	je retGCD
-
-	push rbx
-	mov rbs, rcx
-	cqo
-	idiv rcx
-	mov rcx, rbx
-	call gcd
-	pop rbx
-retGCD:
-	ret
+	push rbx				;	save rbx
+	mov rbs, rcx			;	save a to rbx
+	cqo						;	extend reg
+	idiv rcx				;	divide a(rax) by b(rcx), result = rax, remainder = rdx
+	mov rcx, rbx			;	move a to original reg
+	call gcd				;	gcd(b, a % b)
+	pop rbx					;	
+retGCD:						;
+	ret						;
 
 
 public q
