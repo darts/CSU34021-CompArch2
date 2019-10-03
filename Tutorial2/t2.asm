@@ -42,21 +42,47 @@ p:							; {
 public gcd					; int64 gcd(int64 a, int64 b)
 gcd:						; {
 	mov rax, rcx			;	retVal = a
+	mov r8, rdx				;	bTmp = b
 	test rdx, rdx			;	if(b == 0)
 	je retGCD				;	{ jump to end}
 
-	push rbx				;	save rbx
-	mov rbs, rcx			;	save a to rbx
+	;push rbx				;	save rbx
+	;mov rbs, rcx			;	save a to rbx
+	mov rcx, r8				; 	b = bTmp
 	cqo						;	extend reg
 	idiv rcx				;	divide a(rax) by b(rcx), result = rax, remainder = rdx
-	mov rcx, rbx			;	move a to original reg
+	mov rcx, r8				;	b = bTmp
+	;mov rcx, rbx			;	move a to original reg
 	call gcd				;	gcd(b, a % b)
-	pop rbx					;	
+	;pop rbx					;	
 retGCD:						;
 	ret						;
 
 
 public q
 q:
+	push rbp
+	mov rax, [rbp + 48]
+	add rax, rcx
+	add rax, rdx
+	add rax, r8
+	add rax, r9
 
+	push rbx
+	mov rbx, rax
+	push rax
+	mov rax, [rbp + 48]
+	push rax
+	push r9
+	sub rsp, 32
+	mov r9, r8
+	mov r8, rdx
+	mov rdx, rcx
+	lea rcx, pstr
+	add rsp, 56
+	mov rax, rbx
+	pop rbx
+	pop rbp
+	ret
+	
 END
