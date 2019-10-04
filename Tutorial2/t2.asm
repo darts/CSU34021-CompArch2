@@ -6,6 +6,7 @@ extrn printf:near
  g QWORD 4
 
 pstr db 'a = %I64d b = %I64d c = %I64d d = %I64d e = %I64d sum = %I64d\n'
+qnsStr db 'qns\n'
 
 .code
 
@@ -51,7 +52,11 @@ gcd:						; {
 	cqo						;	extend reg
 	idiv rcx				;	divide a(rax) by b(rcx), result = rax, remainder = rdx
 	mov rcx, r8				;	b = bTmp
+	
+	sub rsp, 32				;	allocateShadowSpace()
 	call gcd				;	gcd(b, a % b)
+	add rsp, 32				;	deallocateShadowSpace()
+
 retGCD:						;	
 	ret						; }
 
@@ -80,5 +85,15 @@ q:							; {
 	mov rax, rbx			;	retVal = sum
 	pop rbx					;	return rbx to previous value
 	ret						;	return retVal}
-	
+
+
+public qns
+qns:
+	lea rcx, qnsStr			;	load string addr to param 1
+	sub rsp, 32				;	deallocateShadowSpace()
+	call printf				;	print(the string)
+	add rsp, 32				;	deallocateShadowSpace()
+	mov rax, 0
+	ret
+
 END
