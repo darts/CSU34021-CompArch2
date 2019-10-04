@@ -1,5 +1,6 @@
 option casemap:none             ; case sensitive
- 
+includelib legacy_stdio_definitions.lib
+extrn printf:near
  .data
  public g
  g QWORD 4
@@ -38,7 +39,7 @@ p:							; {
 	add rsp, 32				;	deallocateShadowSpace()
 	ret						; }
 
-**** double check reg vals
+
 public gcd					; int64 gcd(int64 a, int64 b)
 gcd:						; {
 	mov rax, rcx			;	retVal = a
@@ -46,43 +47,38 @@ gcd:						; {
 	test rdx, rdx			;	if(b == 0)
 	je retGCD				;	{ jump to end}
 
-	;push rbx				;	save rbx
-	;mov rbs, rcx			;	save a to rbx
 	mov rcx, r8				; 	b = bTmp
 	cqo						;	extend reg
 	idiv rcx				;	divide a(rax) by b(rcx), result = rax, remainder = rdx
 	mov rcx, r8				;	b = bTmp
-	;mov rcx, rbx			;	move a to original reg
 	call gcd				;	gcd(b, a % b)
-	;pop rbx					;	
-retGCD:						;
-	ret						;
+retGCD:						;	
+	ret						; }
 
 
-public q
-q:
-	push rbp
-	mov rax, [rbp + 48]
-	add rax, rcx
-	add rax, rdx
-	add rax, r8
-	add rax, r9
+public q					; int64 q(int64 a, int64 b, int64 c, int64 d, int64 e)
+q:							; {
+	mov rax, [rsp + 40]		;	e.getFromStack()
+	add rax, rcx			;	sum = e + a
+	add rax, rdx			;	sum = sum + b
+	add rax, r8				;	sum = sum + c
+	add rax, r9				;	sum = sum + d
 
-	push rbx
-	mov rbx, rax
-	push rax
-	mov rax, [rbp + 48]
-	push rax
-	push r9
-	sub rsp, 32
-	mov r9, r8
-	mov r8, rdx
-	mov rdx, rcx
-	lea rcx, pstr
-	add rsp, 56
-	mov rax, rbx
-	pop rbx
-	pop rbp
-	ret
+	push rbx				;	save reg rbx to make space
+	mov rbx, rax			;	save sum in rbx
+	push rax				;	sum.push
+	mov rax, [rsp + 40]		;	e.getFromStack
+	push rax				;	e.push
+	push r9					;	d.push
+	sub rsp, 32				;	allocate shadow space
+	mov r9, r8				;	move c to param 4
+	mov r8, rdx				;	move b to param 3
+	mov rdx, rcx			;	move a to param 2
+	lea rcx, pstr			;	load string addr to param 1
+	call printf				;	print(the string at top + vars)
+	add rsp, 56				;	clear shadow space and vars from stack
+	mov rax, rbx			;	retVal = sum
+	pop rbx					;	return rbx to previous value
+	ret						;	return retVal}
 	
 END
