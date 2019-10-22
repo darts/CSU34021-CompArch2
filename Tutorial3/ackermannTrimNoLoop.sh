@@ -1,5 +1,5 @@
 #!/bin/bash
-for count in {0..10000}
+for count in {0..100000}
 do
     ./a.out
 done
