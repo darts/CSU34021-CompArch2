@@ -62,10 +62,9 @@ int ackermann(int x, int y)
 int main()
 {
     int retVal = ackermann(3, 6);
-    printf("Ackermann result   : %d\n", retVal);
-    printf("Reg Win Count      : %d\n\n", maxRegWinSize);
-    printf("Procedure calls    : %d\n", procedureCalls);
-    printf("Max Reg Win Depth  : %d\n", maxRegWinDepth);
-    printf("Reg file Overflow  : %d\n", overFlow);
-    printf("Reg file Underflow : %d\n", underFlow);
+    printf("Ackermann result        : %d\n", retVal);
+    printf("Procedure calls         : %d\n", procedureCalls);
+    printf("Max Reg Win Depth       : %d\n", maxRegWinDepth);
+    printf("Reg file Overflow  (%d) : %d\n", maxRegWinSize, overFlow);
+    printf("Reg file Underflow (%d) : %d\n", maxRegWinSize, underFlow);
 }
