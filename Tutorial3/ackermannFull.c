@@ -9,7 +9,7 @@ int minRegWinSize = 2; //minimum size reg file can be before underflow
 int activeRegs = 0; //number of windows active on the reg file
 // ********************
 // Change this to change the number of registers in the register set
-int maxRegWinSize = 6;
+int maxRegWinSize = 16;
 // ********************
 
 void handleRegWin(int isCall){
