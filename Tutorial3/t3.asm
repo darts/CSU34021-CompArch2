@@ -17,6 +17,7 @@ min1:
     ret r25, 0              ; jmp(&r25 + 0)
     xor r0, r0, r0          ; no-op()
 
+
 public p                    ; p function
 p:
     add r10, r0, r3         ; load g to pass to function
@@ -37,4 +38,20 @@ p:
     ret r25, 0              ; jmp(&r25 + 0)
     xor r0, r0, r0          ; no-op()
 
-    
+
+public gcd
+gcd:
+    add r26, r0, r1         ; retVal = a
+    sub r27, r0, r0, {C}    ; if(b == 0)
+    jeq retGCD              ; { jmp to end and return a }
+
+    add r10, r0, r26        ; load a for mod function
+    add r11, r0, r27        ; load b for mod function
+    callr r25, mod          ; tmp = a % b
+
+    add r10, r0, r27        ; load a for gcd recursive call
+    add r11, r0, r1         ; load tmp for gcd recursive call
+    callr r25, gcd          ; retVal = gcd(a, tmp) 
+
+    ret r25, 0              ; jmp(&r25 + 0)
+    xor r0, r0, r0          ; no-op()
