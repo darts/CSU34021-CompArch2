@@ -16,5 +16,5 @@ int ackermann(int x, int y)
 
 int main()
 {
-ackermann(3, 6);
+    ackermann(3, 6);
 }
