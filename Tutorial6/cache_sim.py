@@ -1,12 +1,9 @@
 import sys
 import math
-# input: cache size, x-way, bytes per line, list of memory locations in a file
-# output: "addr: HIT/MISS"
+
 def lookup_tag(tag, set_num):
-    if tag in c_block[set_num]:
-        return True
-    else: 
-        return False
+    return tag in c_block[set_num]
+    
 
 def create_block(width, height, init_val):
     return [[init_val for x in range(width)] for y in range(height)] 
@@ -70,4 +67,3 @@ for i in numbers:
         miss_count += 1
 
 print(hit_count)
-
