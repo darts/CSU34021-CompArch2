@@ -26,11 +26,11 @@ def insert_tag(tag, set_num):
     c_block[set_num].pop()
 
 
-if len(sys.argv) != 6:
-    print(f'usage: {sys.argv[0]} cache_size_in_bytes no_of_sets x-way bytes_per_line file_containing_addresses \n eg. {sys.argv[0]} 128 8 1 16 addr.txt')
+if len(sys.argv) != 5:
+    print(f'usage: {sys.argv[0]} L N K file_containing_addresses \n   eg: {sys.argv[0]} 16 8 1 addr.txt')
     exit(1)
 
-with open(sys.argv[5]) as a_list:
+with open(sys.argv[4]) as a_list:
     numbers = list(map(lambda l: int(l, 16), a_list))
 
 res_list = [len(numbers)]
