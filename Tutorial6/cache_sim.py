@@ -18,11 +18,12 @@ def get_loc(tag, set_num):
     return -1
 
 def update_lru(tag, set_num):
-    
+    del c_block[set_num][get_loc(tag, set_num)]
+    c_block[set_num].insert(0, tag)
 
-# def insert_tag(tag, set_num):
-
-
+def insert_tag(tag, set_num):
+    c_block[set_num].insert(0, tag)
+    c_block[set_num].pop()
 
 
 if len(sys.argv) != 6:
@@ -37,25 +38,19 @@ res_list = [len(numbers)]
 hit_count = 0
 miss_count = 0
 
-c_block = create_block(int(sys.argv[3]), int(sys.argv[2]), 0)
-l_r_u_list = create_block(int(sys.argv[3]), int(sys.argv[2]), int(sys.argv[3])+1)
-
-print(l_r_u_list)
+c_block = create_block(int(sys.argv[3]), int(sys.argv[2]), -1)
 
 for i in numbers:
     addr_tag = ((i & int('111111110000000', 2)) >> 7)
     set_num  = ((i & int('000000001110000', 2)) >> 4)
 
     if lookup_tag(addr_tag, set_num):
+        update_lru(addr_tag, set_num)
         res_list.append("HIT")
         hit_count += 1
     else:
         res_list.append("MISS")
-        c_block[set_num] = addr_tag
+        insert_tag(addr_tag, set_num)
         miss_count += 1
 
-
-
-
-
-
+print(hit_count)
