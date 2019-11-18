@@ -11,6 +11,18 @@ def lookup_tag(tag, set_num):
 def create_block(width, height, init_val):
     return [[init_val for x in range(width)] for y in range(height)] 
 
+def get_loc(tag, set_num):
+    for i in range(len(c_block[set_num])):
+        if c_block[set_num][i] == tag:
+            return i
+    return -1
+
+def update_lru(tag, set_num):
+    
+
+# def insert_tag(tag, set_num):
+
+
 
 
 if len(sys.argv) != 6:
@@ -26,8 +38,9 @@ hit_count = 0
 miss_count = 0
 
 c_block = create_block(int(sys.argv[3]), int(sys.argv[2]), 0)
-m_r_u_list = create_block(int(sys.argv[3]), int(sys.argv[2]), int(sys.argv[3])+1)
+l_r_u_list = create_block(int(sys.argv[3]), int(sys.argv[2]), int(sys.argv[3])+1)
 
+print(l_r_u_list)
 
 for i in numbers:
     addr_tag = ((i & int('111111110000000', 2)) >> 7)
