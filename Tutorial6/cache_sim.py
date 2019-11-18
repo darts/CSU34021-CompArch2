@@ -2,11 +2,22 @@ import sys
 # input: cache size, x-way, bytes per line, list of memory locations in a file
 # output: "addr: HIT/MISS"
 
-if len(sys.argv) != 5:
+def lookup_tag(tag, set_num):
+    if tag in c_block[set_num]:
+        return True
+    else: 
+        return False
+
+def create_block(width, height, init_val):
+    return [[init_val for x in range(width)] for y in range(height)] 
+
+
+
+if len(sys.argv) != 6:
     print(f'usage: {sys.argv[0]} cache_size_in_bytes no_of_sets x-way bytes_per_line file_containing_addresses \n eg. {sys.argv[0]} 128 8 1 16 addr.txt')
     exit(1)
 
-with open(sys.argv[4]) as a_list:
+with open(sys.argv[5]) as a_list:
     numbers = list(map(lambda l: int(l, 16), a_list))
 
 res_list = [len(numbers)]
@@ -14,10 +25,8 @@ res_list = [len(numbers)]
 hit_count = 0
 miss_count = 0
 
-
-w, h = sys.argv[3], sys.argv[2]
-c_block = [[0 for x in range(w)] for y in range(h)] 
-m_r_u_list = c_block
+c_block = create_block(int(sys.argv[3]), int(sys.argv[2]), 0)
+m_r_u_list = create_block(int(sys.argv[3]), int(sys.argv[2]), int(sys.argv[3])+1)
 
 
 for i in numbers:
@@ -32,12 +41,8 @@ for i in numbers:
         c_block[set_num] = addr_tag
         miss_count += 1
 
-def update_MRU(tag, set_num):
 
 
 
-def lookup_tag(tag, set_num):
-    if tag in c_block[set_num]:
-        return True
-    else: 
-        return False
+
+
