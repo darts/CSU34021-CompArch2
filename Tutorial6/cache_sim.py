@@ -4,7 +4,6 @@ import math
 def lookup_tag(tag, set_num):
     return tag in c_block[set_num]
     
-
 def create_block(width, height, init_val):
     return [[init_val for x in range(width)] for y in range(height)] 
 
@@ -38,7 +37,27 @@ def gen_masks():
         set_mask += '0'
     return [int(addr_mask,2), int(set_mask,2), offset_length, setnum_length]
 
-if len(sys.argv) != 5:
+def write_block(output_str):
+    if len(sys.argv) > 5:
+        tmp_str = ""
+        for i in range(len(c_block[0])):
+            output_str += "| tag "+ str(i) + "  "
+            tmp_str += ":---:"+"|"
+        output_str += "\n" + tmp_str + "\n"
+        for i in c_block:
+            for j in i:
+                output_str += str(j) + " |"
+            output_str += "\n"
+        output_str += "<br><br><br>\n"
+    return output_str
+
+def write_tag(output_str, tag, set_, found):
+    if found:
+        return (output_str + ("``` \ntag "+str(tag)+" found in set "+ str(set_) + "  HIT \nupdating LRU... \n``` \n"))
+    else:
+        return (output_str + ("``` \ntag "+str(tag)+" not found in set "+ str(set_) + "  MISS \ntag "+str(tag)+" -> set " + str(set_) +" \n ``` \n"))
+    
+if (len(sys.argv) < 5) or (len(sys.argv) > 6) or not sys.argv[5] == '-v':
     print(f'usage: {sys.argv[0]} L N K file_containing_addresses \n   eg: {sys.argv[0]} 16 8 1 addr.txt')
     exit(1)
 
@@ -50,7 +69,8 @@ res_list = []
 hit_count = 0
 miss_count = 0
 
-c_block = create_block(int(sys.argv[3]), int(sys.argv[2]), -1)
+c_block = create_block(int(sys.argv[3]), int(sys.argv[2]), "X")
+output_str = write_block(("# L="+sys.argv[1]+"  N="+sys.argv[2]+"  K="+sys.argv[3]+ " \n **LRU status is combined with tags, lower tag value -> more recently used**  \nSet values of 'X' are to be considered empty\n  "))
 masks = gen_masks()
 
 for i in numbers:
@@ -61,9 +81,19 @@ for i in numbers:
         update_lru(addr_tag, set_num)
         res_list.append("HIT")
         hit_count += 1
+        output_str = write_tag(output_str, addr_tag, set_num, True)
     else:
         res_list.append("MISS")
         insert_tag(addr_tag, set_num)
         miss_count += 1
+        output_str = write_tag(output_str, addr_tag, set_num, False)
+    
+    output_str = write_block(output_str)
 
+output_str += "**<br>Hits: " + str(hit_count) + "\n<br>Misses: " + str(miss_count) + "**"
 print(hit_count)
+if len(sys.argv) == 6:
+    fout = open("output.md", 'w+')
+    fout.write(output_str)
+    fout.flush()
+    fout.close()
