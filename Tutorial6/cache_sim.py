@@ -48,7 +48,7 @@ def write_block(output_str):
             for j in i:
                 output_str += str(j) + " |"
             output_str += "\n"
-        output_str += "<br><br><br>\n"
+        output_str += "<br><br>\n"
     return output_str
 
 def write_tag(output_str, tag, set_, found):
@@ -70,7 +70,7 @@ hit_count = 0
 miss_count = 0
 
 c_block = create_block(int(sys.argv[3]), int(sys.argv[2]), "X")
-output_str = write_block(("# L="+sys.argv[1]+"  N="+sys.argv[2]+"  K="+sys.argv[3]+ " \n **LRU status is combined with tags, lower tag value -> more recently used**  \nSet values of 'X' are to be considered empty\n  "))
+output_str = write_block(("## L="+sys.argv[1]+"  N="+sys.argv[2]+"  K="+sys.argv[3]+ " \n **LRU status is combined with tags, lower tag value -> more recently used**  \nSet values of 'X' are to be considered empty\n  "))
 masks = gen_masks()
 
 for i in numbers:
@@ -90,7 +90,7 @@ for i in numbers:
     
     output_str = write_block(output_str)
 
-output_str += "**<br>Hits: " + str(hit_count) + "\n<br>Misses: " + str(miss_count) + "**"
+output_str += "**Hits: " + str(hit_count) + "\n<br>Misses: " + str(miss_count) + "**"
 print(hit_count)
 if len(sys.argv) == 6:
     fout = open("output.md", 'w+')
