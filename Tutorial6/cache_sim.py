@@ -37,8 +37,8 @@ def gen_masks():
         set_mask += '0'
     return [int(addr_mask,2), int(set_mask,2), offset_length, setnum_length]
 
-def write_block(output_str):
-    if len(sys.argv) > 5:
+def write_block(output_str, override):
+    if ((len(sys.argv) > 5) and sys.argv[5] == '-v') or override:
         tmp_str = ""
         for i in range(len(c_block[0])):
             output_str += "| tag "+ str(i) + "  "
@@ -48,16 +48,16 @@ def write_block(output_str):
             for j in i:
                 output_str += str(j) + " |"
             output_str += "\n"
-        output_str += "<br><br>\n"
+        output_str += "\n"
     return output_str
 
 def write_tag(output_str, tag, set_, found):
     if found:
-        return (output_str + ("``` \ntag "+str(tag)+" found in set "+ str(set_) + "  HIT \nupdating LRU... \n``` \n"))
+        return (output_str + ("``` \nHIT - tag "+str(tag)+" found in set "+ str(set_) + ", updating LRU...  \n```   \n"))
     else:
-        return (output_str + ("``` \ntag "+str(tag)+" not found in set "+ str(set_) + "  MISS \ntag "+str(tag)+" -> set " + str(set_) +" \n ``` \n"))
+        return (output_str + ("``` \nMISS - tag "+str(tag)+" not found in set "+ str(set_) + ", tag "+str(tag)+" -> set " + str(set_) +" \n```   \n"))
     
-if (len(sys.argv) < 5) or (len(sys.argv) > 6) or not sys.argv[5] == '-v':
+if (len(sys.argv) < 5) or (len(sys.argv) > 6) or not (sys.argv[5] == '-v' or sys.argv[5] == '-sv'):
     print(f'usage: {sys.argv[0]} L N K file_containing_addresses \n   eg: {sys.argv[0]} 16 8 1 addr.txt')
     exit(1)
 
@@ -70,7 +70,7 @@ hit_count = 0
 miss_count = 0
 
 c_block = create_block(int(sys.argv[3]), int(sys.argv[2]), "X")
-output_str = write_block(("## L="+sys.argv[1]+"  N="+sys.argv[2]+"  K="+sys.argv[3]+ " \n **LRU status is combined with tags, lower tag value -> more recently used**  \nSet values of 'X' are to be considered empty\n  "))
+output_str = write_block(("## L="+sys.argv[1]+"  N="+sys.argv[2]+"  K="+sys.argv[3]+ " \n **When displaying cache: LRU status is combined with tags, lower tag value -> more recently used**  \nSet values of 'X' are to be considered empty\n  "), True)
 masks = gen_masks()
 
 for i in numbers:
@@ -88,7 +88,7 @@ for i in numbers:
         miss_count += 1
         output_str = write_tag(output_str, addr_tag, set_num, False)
     
-    output_str = write_block(output_str)
+    output_str = write_block(output_str, False)
 
 output_str += "**Hits: " + str(hit_count) + "\n<br>Misses: " + str(miss_count) + "**"
 print(hit_count)
