@@ -57,7 +57,7 @@ def write_tag(output_str, tag, set_, found):
     else:
         return (output_str + ("``` \nMISS - tag "+str(tag)+" not found in set "+ str(set_) + ", tag "+str(tag)+" -> set " + str(set_) +" \n```   \n"))
     
-if (len(sys.argv) < 5) or (len(sys.argv) > 6) or not (sys.argv[5] == '-v' or sys.argv[5] == '-sv'):
+if (len(sys.argv) < 5) or (len(sys.argv) > 6) or (len(sys.argv) == 6 and (not (sys.argv[5] == '-v' or sys.argv[5] == '-sv'))):
     print(f'usage: {sys.argv[0]} L N K file_containing_addresses \n   eg: {sys.argv[0]} 16 8 1 addr.txt')
     exit(1)
 
@@ -91,7 +91,7 @@ for i in numbers:
     output_str = write_block(output_str, False)
 
 output_str += "**Hits: " + str(hit_count) + "\n<br>Misses: " + str(miss_count) + "**"
-print(hit_count)
+print(output_str)
 if len(sys.argv) == 6:
     fout = open("output.md", 'w+')
     fout.write(output_str)
